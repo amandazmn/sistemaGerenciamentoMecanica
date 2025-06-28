@@ -24,12 +24,12 @@ public class Funcionario {
         System.out.println("Funcionario inserido com sucesso!\n" + func.toString());
     }
 
-    public static void atualizarFunc(Scanner sc, ArrayList<Funcionario> funcionarios){
+    public static void atualizarFunc(Scanner sc){
         Funcionario func = new Funcionario();
 
         System.out.println("Informe o cpf do funcionario a ser editado: ");
         String id = sc.nextLine();
-        func = buscarFuncPorCpf(id, funcionarios);
+        func = buscarFuncPorCpf(id);
 
         if(func != null){
             System.out.println("Atualize as informações");
@@ -63,7 +63,7 @@ public class Funcionario {
 
         System.out.println("Informe o cpf/cnpj do cliente a ser excluido: ");
         String id = sc.nextLine();
-        func = buscarFuncPorCpf(id, funcionarios);
+        func = buscarFuncPorCpf(id);
 
         if(func != null) {
             funcionarios.remove(func);
@@ -79,13 +79,14 @@ public class Funcionario {
         System.out.println("- - - - - - - - - - - - - - - - -");
     }
 
-    public static Funcionario buscarFuncPorCpf(String cpf, ArrayList<Funcionario> funcionarios){
+    public static Funcionario buscarFuncPorCpf(String cpf){
+        ArrayList<Funcionario> funcionarios = Main.funcionarios;
         for(Funcionario f : funcionarios){
             if(f.getCpf().equals(cpf)){
                 return f;
             }
         }
-        System.out.println("Cliente informado nao existe!");
+        System.out.println("Funcionario informado nao existe!");
         return null;
     }
 

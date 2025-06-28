@@ -5,7 +5,6 @@ public class Main {
 
     public static ArrayList<Cliente> clientes = new ArrayList<>();
     public static ArrayList<Funcionario> funcionarios = new ArrayList<>();
-    public static ArrayList<ItemOS> itensOS;
     public static ArrayList<OrdemServico> oss = new ArrayList<>();
     public static ArrayList<Peca> pecas = new ArrayList<>();
     public static ArrayList<Veiculo> veiculos = new ArrayList<>();
@@ -60,8 +59,11 @@ public class Main {
             System.out.println("2 - Listar " + entidade + "s");
             System.out.println("3 - Atualizar " + entidade);
             System.out.println("4 - Deletar " + entidade);
-            System.out.println("0 - Voltar ao menu principal");
-            System.out.print("Escolha uma opção: ");
+            if (entidade.equals("Ordem de Serviço")) {
+                System.out.println("5 - Consultar OS por Veículo");
+                System.out.println("6 - Consultar OS por Funcionário");
+            }
+            System.out.print("0 - Voltar ao menu principal\nEscolha uma opção: ");
 
             opcao = sc.nextInt();
             sc.nextLine(); // limpar buffer
@@ -73,14 +75,11 @@ public class Main {
                     } else if (entidade.equals("Funcionário")) {
                         Funcionario.criarFunc(sc, funcionarios);
                     } else if (entidade.equals("Peças")) {
-                        System.out.println("Executando criação de Peça...");
-                        // Pecas.criar();
+                        Peca.criarPeca(sc, pecas);
                     } else if (entidade.equals("Ordem de Serviço")) {
-                        System.out.println("Executando criação de Ordem de Serviço...");
-                        // OrdemServico.criar();
+                        OrdemServico.criarOs(sc, oss);
                     } else if (entidade.equals("Veículo")) {
-                        System.out.println("Executando criação de Veículo...");
-                        // Veiculo.criar();
+                        Veiculo.criarVeiculo(sc, veiculos);
                     }
                     break;
 
@@ -90,25 +89,25 @@ public class Main {
                     } else if (entidade.equals("Funcionário")) {
                         Funcionario.listarFunc(funcionarios);
                     } else if (entidade.equals("Peças")) {
-                        System.out.println("Listando Peças...");
+                        Peca.listarPecas(pecas);
                     } else if (entidade.equals("Ordem de Serviço")) {
-                        System.out.println("Listando Ordens de Serviço...");
+                        OrdemServico.listarOs(oss);
                     } else if (entidade.equals("Veículo")) {
-                        System.out.println("Listando Veículos...");
+                        Veiculo.listarVeiculos(veiculos);
                     }
                     break;
 
                 case 3:
                     if (entidade.equals("Cliente")) {
-                        Cliente.atualizarCliente(sc, clientes);
+                        Cliente.atualizarCliente(sc);
                     } else if (entidade.equals("Funcionário")) {
-                        Funcionario.atualizarFunc(sc, funcionarios);
+                        Funcionario.atualizarFunc(sc);
                     } else if (entidade.equals("Peças")) {
-                        System.out.println("Atualizando Peça...");
+                        Peca.atualizarPeca(sc);
                     } else if (entidade.equals("Ordem de Serviço")) {
-                        System.out.println("Atualizando Ordem de Serviço...");
+                        OrdemServico.atualizarrOS(sc, oss);
                     } else if (entidade.equals("Veículo")) {
-                        System.out.println("Atualizando Veículo...");
+                        Veiculo.atualizarVeiculo(sc);
                     }
                     break;
 
@@ -118,21 +117,39 @@ public class Main {
                     } else if (entidade.equals("Funcionário")) {
                         Funcionario.deletarFunc(sc, funcionarios);
                     } else if (entidade.equals("Peças")) {
-                        System.out.println("Deletando Peça...");
+                        Peca.deletarPeca(sc, pecas);
                     } else if (entidade.equals("Ordem de Serviço")) {
-                        System.out.println("Deletando Ordem de Serviço...");
+                        OrdemServico.deletarOs(sc, oss);
                     } else if (entidade.equals("Veículo")) {
-                        System.out.println("Deletando Veículo...");
+                        Veiculo.deletarVeiculo(sc, veiculos);
                     }
                     break;
+
+                case 5:
+                    if (entidade.equals("Ordem de Serviço")) {
+                        OrdemServico.consultarServicos(sc, oss);
+                    } else {
+                        System.out.println("Opção inválida! Tente novamente.");
+                    }
+                    break;
+
+                case 6:
+                    if (entidade.equals("Ordem de Serviço")) {
+                        OrdemServico.consultaOsFunc(sc, oss);
+                    } else {
+                        System.out.println("Opção inválida! Tente novamente.");
+                    }
+                    break;
+
                 case 0:
                     System.out.println("Voltando ao menu principal...");
                     break;
+
                 default:
                     System.out.println("Opção inválida! Tente novamente.");
             }
 
-            System.out.println(); // linha em branco
+            System.out.println();
 
         } while (opcao != 0);
     }

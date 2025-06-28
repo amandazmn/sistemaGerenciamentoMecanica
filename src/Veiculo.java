@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Veiculo {
     private String placa;
@@ -9,24 +10,125 @@ public class Veiculo {
     private String motor;
     private Cliente cliente;
 
-    public void criarVeiculo(){
+    public static void criarVeiculo(Scanner sc, ArrayList<Veiculo> veiculos) {
+        Veiculo v = new Veiculo();
 
+        System.out.println("Informe placa: ");
+        v.setPlaca(sc.nextLine());
+        System.out.println("Informe marca: ");
+        v.setMarca(sc.nextLine());
+        System.out.println("Informe modelo: ");
+        v.setModelo(sc.nextLine());
+        System.out.println("Informe ano: ");
+        v.setAno(Integer.parseInt(sc.nextLine()));
+        System.out.println("Informe chassi: ");
+        v.setChassi(Integer.parseInt(sc.nextLine()));
+        System.out.println("Informe motor: ");
+        v.setMotor(sc.nextLine());
+        System.out.println("Informe cpf/cnpj do cliente proprietário: ");
+        Cliente c = Cliente.buscarCliPorCpfCnpj(sc.nextLine());
+        if (c != null) {
+            v.setCliente(c);
+        }
+
+        veiculos.add(v);
+        System.out.println("Veiculo inserido com sucesso!\n" + v.toString());
     }
 
-    public void atualizarVeiculo(){
+    public static void atualizarVeiculo(Scanner sc) {
+        Veiculo v = new Veiculo();
 
+        System.out.println("Informe a placa do veiculo a ser editado: ");
+        String placa = sc.nextLine();
+        v = buscarVeiculoPelaPlaca(placa);
+
+        if (v != null) {
+            System.out.println("Atualize as informações");
+            System.out.println("Placa: " + v.getPlaca());
+            String pl = sc.nextLine();
+            if (pl != null && !pl.isEmpty() && !pl.equals("0")) {
+                v.setPlaca(pl);
+            }
+
+            System.out.println("Marca: " + v.getMarca());
+            String marca = sc.nextLine();
+            if (marca != null && !marca.isEmpty() && !marca.equals("0")) {
+                v.setMarca(marca);
+            }
+
+            System.out.println("Modelo: " + v.getModelo());
+            String modelo = sc.nextLine();
+            if (modelo != null && !modelo.isEmpty() && !modelo.equals("0")) {
+                v.setModelo(modelo);
+            }
+
+            System.out.println("Ano: " + v.getAno());
+            String anoStr = sc.nextLine();
+            if (anoStr != null && !anoStr.isEmpty() && !anoStr.equals("0")) {
+                v.setAno(Integer.parseInt(anoStr));
+            }
+
+            System.out.println("Chassi: " + v.getChassi());
+            String chassiStr = sc.nextLine();
+            if (chassiStr != null && !chassiStr.isEmpty() && !chassiStr.equals("0")) {
+                v.setChassi(Integer.parseInt(chassiStr));
+            }
+
+            System.out.println("Motor: " + v.getMotor());
+            String motor = sc.nextLine();
+            if (motor != null && !motor.isEmpty() && !motor.equals("0")) {
+                v.setMotor(motor);
+            }
+
+            System.out.println("Cliente atual: " + v.getCliente());
+            String cli = sc.nextLine();
+            if (cli != null && !cli.isEmpty() && !cli.equals("0")) {
+                Cliente c = Cliente.buscarCliPorCpfCnpj(cli);
+                if (c != null) {
+                    v.setCliente(c);
+                }
+            }
+
+            System.out.println("Veiculo atualizado com sucesso!\n" + v.toString());
+        }
     }
 
-    public void deletarVeiculo(){
+    public static void deletarVeiculo(Scanner sc, ArrayList<Veiculo> veiculos) {
+        Veiculo v = new Veiculo();
 
+        System.out.println("Informe a placa do veiculo a ser excluido: ");
+        String placa = sc.nextLine();
+        v = buscarVeiculoPelaPlaca(placa);
+
+        if (v != null) {
+            veiculos.remove(v);
+            System.out.println("Veiculo excluido com sucesso!");
+        }
     }
 
-    public void listarVeiculos(){
-
+    public static void listarVeiculos(ArrayList<Veiculo> veiculos) {
+        System.out.println("- - - LISTA DE VEICULOS - - -");
+        for (Veiculo v : veiculos) {
+            System.out.println(v.toString());
+        }
+        System.out.println("- - - - - - - - - - - - - - - - -");
     }
 
-    public Veiculo buscarVeiculoPelaPlaca(ArrayList<Veiculo> veiculos, String placa){
-        for(Veiculo v : veiculos){
+    @Override
+    public String toString() {
+        return "Veiculo: " +
+                "placa='" + placa + '\'' +
+                ", marca='" + marca + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", ano=" + ano +
+                ", chassi=" + chassi +
+                ", motor='" + motor + '\'' +
+                ", cliente=" + cliente;
+    }
+
+    public static Veiculo buscarVeiculoPelaPlaca(String placa) {
+        ArrayList<Veiculo> veiculos = Main.veiculos;
+        for (Veiculo v : veiculos) {
             if (v.getPlaca().equals(placa)) {
                 return v;
             }

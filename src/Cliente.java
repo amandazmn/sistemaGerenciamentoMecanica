@@ -27,12 +27,12 @@ public class Cliente {
         System.out.println("Cliente inserido com sucesso!\n" + cli.toString());
     }
 
-    public static void atualizarCliente(Scanner sc, ArrayList<Cliente> clientes){
+    public static void atualizarCliente(Scanner sc){
         Cliente cli = new Cliente();
 
         System.out.println("Informe o cpf/cnpj do cliente a ser editado: ");
         String id = sc.nextLine();
-        cli = buscarCliPorCpfCnpj(id, clientes);
+        cli = buscarCliPorCpfCnpj(id);
 
         if(cli != null) {
 
@@ -72,7 +72,7 @@ public class Cliente {
 
         System.out.println("Informe o cpf/cnpj do cliente a ser excluido: ");
         String id = sc.nextLine();
-        cli = buscarCliPorCpfCnpj(id, clientes);
+        cli = buscarCliPorCpfCnpj(id);
 
         if(cli != null) {
             clientes.remove(cli);
@@ -88,7 +88,8 @@ public class Cliente {
         System.out.println(" - - - - - - - - - - -\n");
     }
 
-    public static Cliente buscarCliPorCpfCnpj(String id, ArrayList<Cliente> clientes){
+    public static Cliente buscarCliPorCpfCnpj(String id){
+        ArrayList<Cliente> clientes = Main.clientes;
         for(Cliente c : clientes){
             if(c.getCpf().equals(id) || c.getCnpj().equals(id)){
                 return c;

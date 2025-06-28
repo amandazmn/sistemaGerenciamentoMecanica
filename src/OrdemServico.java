@@ -12,12 +12,12 @@ public class OrdemServico {
     private String obs;
     private double valor;
 
-    public void consultarServicos(Scanner sc, ArrayList<OrdemServico> oss, ArrayList<Veiculo> veiculos){
+    public static void consultarServicos(Scanner sc, ArrayList<OrdemServico> oss){
         Veiculo v = new Veiculo();
         System.out.println("Placa veiculo a ser consultado: ");
         String placa = sc.nextLine();
 
-        v = v.buscarVeiculoPelaPlaca(veiculos, placa);
+        v = v.buscarVeiculoPelaPlaca(placa);
 
         double total = 0;
         ArrayList<OrdemServico> osVeiculo = new ArrayList<>();
@@ -35,12 +35,12 @@ public class OrdemServico {
 
     }
 
-    public void consultaOsFunc(Scanner sc, ArrayList<OrdemServico> oss, ArrayList<Funcionario> funcionarios){
+    public static void consultaOsFunc(Scanner sc, ArrayList<OrdemServico> oss){
         Funcionario f = new Funcionario();
         System.out.println("Cpf funcionario a ser consultado: ");
         String cpf = sc.nextLine();
 
-        f = Funcionario.buscarFuncPorCpf(cpf, funcionarios);
+        f = Funcionario.buscarFuncPorCpf(cpf);
 
         double total = 0;
         ArrayList<OrdemServico> osFunc = new ArrayList<>();
@@ -57,7 +57,7 @@ public class OrdemServico {
         System.out.println("\nTotal valor das os's: " + total);
     }
 
-    public void criarOs(Scanner sc, ArrayList<OrdemServico> oss, ArrayList<Cliente> clientes, ArrayList<Veiculo> veiculos, ArrayList<Funcionario> funcionarios, ArrayList<Peca> pecas){
+    public static void criarOs(Scanner sc, ArrayList<OrdemServico> oss){
         OrdemServico os = new OrdemServico();
         Cliente c = new Cliente();
         Veiculo v = new Veiculo();
@@ -66,16 +66,17 @@ public class OrdemServico {
         ArrayList<ItemOS> pecasOs = new ArrayList<>();
         ItemOS itemOS;
 
-        System.out.println("Informe os: ");
-        os.setOs(Integer.parseInt(sc.nextLine()));
+        int nOs = oss.size() + 1;
+        System.out.println("Criando os n " + nOs);
+        os.setOs(nOs);
         System.out.println("Informe cpf/cnpj cliente: ");
-        c = Cliente.buscarCliPorCpfCnpj(sc.nextLine(), clientes);
+        c = Cliente.buscarCliPorCpfCnpj(sc.nextLine());
         if (c == null){
             return;
         }
         os.setCliente(c);
         System.out.println("Informe placa veiculo: ");
-        v = v.buscarVeiculoPelaPlaca(veiculos, sc.nextLine());
+        v = Veiculo.buscarVeiculoPelaPlaca(sc.nextLine());
         if (v == null){
             return;
         }
@@ -83,7 +84,7 @@ public class OrdemServico {
         System.out.println("Informe km veiculo: ");
         os.setKm(Integer.parseInt(sc.nextLine()));
         System.out.println("Informe cpf funcionario: ");
-        f = Funcionario.buscarFuncPorCpf(sc.nextLine(), funcionarios);
+        f = Funcionario.buscarFuncPorCpf(sc.nextLine());
         if (f == null){
             return;
         }
@@ -94,7 +95,7 @@ public class OrdemServico {
         do{
             System.out.println("Informe id da peca: ");
             id = Integer.parseInt(sc.nextLine());
-            p = p.buscarPecaPorId(id, pecas);
+            p = Peca.buscarPecaPorId(id);
             if(p != null){
                 System.out.println("Informe quantidade: ");
                 itemOS = new ItemOS(p, p.getValor(), Integer.parseInt(sc.nextLine()));
@@ -114,16 +115,123 @@ public class OrdemServico {
         System.out.println("OS inserido com sucesso!\n" + os.toString());
     }
 
-    public void atualizarrOS(){
+    public static void atualizarrOS(Scanner sc, ArrayList<OrdemServico> oss){
+        OrdemServico os = new OrdemServico();
 
+        System.out.println("Informe o numero da os a ser editada: ");
+        int nOs = Integer.parseInt(sc.nextLine());
+        os = oss.get(nOs);
+
+        if(os != null) {
+            System.out.println("Atualize as informações");
+            System.out.println("Cliente: " + os.getCliente().getCpf() + " / " + os.getCliente().getCnpj());
+            String cli = sc.nextLine();
+            if (cli != null && !cli.isEmpty() && !cli.equals("0")) {
+                Cliente cliNovo = new Cliente();
+                cliNovo = Cliente.buscarCliPorCpfCnpj(cli);
+                if(cliNovo != null){
+                    os.setCliente(cliNovo);
+                }
+            }
+
+            System.out.println("Veiculo: " + os.getVeiculo().getPlaca());
+            String placa = sc.nextLine();
+            if (placa != null && !placa.isEmpty() && !placa.equals("0")) {
+                Veiculo v = new Veiculo();
+                v = Veiculo.buscarVeiculoPelaPlaca(placa);
+                if(v != null){
+                    os.setVeiculo(v);
+                }
+            }
+
+            System.out.println("Km do veiculo (para não alterar digite -1): " + os.getKm());
+            int km = Integer.parseInt(sc.nextLine());
+            if (km >= 0) {
+                os.setKm(km);
+            }
+
+            System.out.println("Deseja atualizar as pecas da os (0 - nao | 1 - sim): ");
+            int op = Integer.parseInt(sc.nextLine());
+            if(op == 1){
+                for(ItemOS i : os.getPecasOs()){
+                    System.out.println("Id peca: " + i.getPeca().getId());
+                    int id = Integer.parseInt(sc.nextLine());
+                    if (id != 0){
+                        Peca p = new Peca();
+                        p = Peca.buscarPecaPorId(id);
+                        if (p != null){
+                            System.out.println("Informe quantidade: ");
+                            ItemOS ios = new ItemOS(p, p.getValor(),Integer.parseInt(sc.nextLine()));
+                            int index = os.getPecasOs().indexOf(i);
+                            os.getPecasOs().set(index, ios);
+                        }
+                    }
+                }
+            }
+
+            System.out.println("Cpf Responsavel: " + os.getResponsavel().getCpf() + " | " + os.getResponsavel().getNome());
+            String cpf = sc.nextLine();
+            if (cpf != null && !cpf.isEmpty() && !cpf.equals("0")) {
+                Funcionario f = new Funcionario();
+                f = Funcionario.buscarFuncPorCpf(cpf);
+                if(f != null){
+                    os.setResponsavel(f);
+                }
+            }
+
+            System.out.println("Descrição: " + os.getDesc());
+            String desc = sc.nextLine();
+            if (desc != null && !desc.isEmpty() && !desc.equals("0")) {
+                os.setDesc(desc);
+            }
+
+            System.out.println("Obs: " + os.getDesc());
+            String obs = sc.nextLine();
+            if (obs != null && !obs.isEmpty() && !obs.equals("0")) {
+                os.setObs(obs);
+            }
+
+            System.out.println("Valor: R$" + os.getValor());
+            Double valor = Double.parseDouble(sc.nextLine());
+            if (valor != 0) {
+                os.setValor(valor);
+            }
+
+            System.out.println("OS atualizada com sucesso!\n" + os.toString());
+        }
     }
 
-    public void listarOs(){
-
+    public static void listarOs(ArrayList<OrdemServico> oss) {
+        System.out.println("- - - LISTA DE ORDENS DE SERVIÇO - - -");
+        for (OrdemServico os : oss) {
+            System.out.println(os.toString());
+        }
+        System.out.println("- - - - - - - - - - - - - - - - - - -");
     }
 
-    public void deletarOs(){
 
+    public static void deletarOs(Scanner sc, ArrayList<OrdemServico> oss){
+        OrdemServico os = new OrdemServico();
+
+        System.out.println("Informe a numero da os a ser excluido: ");
+        int num = Integer.parseInt(sc.nextLine());
+        os = buscarOs(num);
+
+        if (os != null) {
+            oss.remove(os);
+            System.out.println("OS excluido com sucesso!");
+        }
+    }
+
+    public static OrdemServico buscarOs(int numero) {
+        ArrayList<OrdemServico> oss = Main.oss;
+        for (OrdemServico os : oss) {
+            if (os.getOs() == numero) {
+                return os;
+            }
+        }
+        System.out.println("Ordem de Serviço informada não existe!");
+        return null;
     }
 
     @Override
